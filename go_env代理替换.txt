@@ -1,0 +1,27 @@
+***********************GOPROXY说明**********************
+
+	官方Go Modules Mirror:
+	https://proxy.golang.org
+	这是官方提供的模块代理服务，通常在国内可能访问速度较慢或不稳定。
+	Goproxy.cn:
+	https://goproxy.cn
+	Goproxy.cn 是一个快速且稳定的Go模块代理服务，在中国大陆地区特别受欢迎，因为它能有效解决访问官方Go模块仓库时可能遇到的网络问题。
+	Goproxy.io:
+	https://goproxy.io
+	另一个全球性的Go模块代理服务，速度和服务质量因地区而异，但通常是一个不错的选择。
+
+
+***********************GOPROXY说明**********************
+对于Unix-like系统（如Linux或macOS），在终端中执行：
+go env原始配置：
+GOPROXY=https://proxy.golang.org,direct
+
+
+更新GOPROXY代理地址：
+#go env -w GO111MODULE=on  
+go env -w GOPROXY=https://goproxy.cn,direct
+
+
+powershell：
+$env:GO111MODULE ="on"  
+$env:GOPROXY ="https://goproxy.cn,direct"

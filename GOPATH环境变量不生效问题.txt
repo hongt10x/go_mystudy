@@ -1,0 +1,38 @@
+********************
+	明明已经声明了GOPATH的工作路径，在程序运行导入包时，却将包的路径合并到GOROOT中去，怎么处理？
+
+********************
+
+	如果你在程序运行时遇到将包的路径错误地合并到 GOROOT 而不是 GOPATH 的问题，这通常不是 Go 语言本身的直接行为，因为 Go 编译器和运行时环境会明确区分 GOROOT 和 GOPATH（或 Go Modules）。然而，这种情况可能是由几个常见原因引起的：
+
+	1、IDE 配置问题：
+		如果你在使用集成开发环境（IDE）如 GoLand，确保 IDE 的 Go 配置正确设置了 GOPATH 和 GOROOT。有时候 IDE 可能没有正确读取环境变量，或者你有多个 Go SDK 版本，并且 IDE 配置了错误的版本。
+	2、环境变量未正确设置：
+		确保你的系统环境变量 GOPATH 和 GOROOT 已经正确设置，并且你的命令行窗口（终端）已经重新加载了这些环境变量。你可以在命令行中运行 echo %GOPATH%（Windows）或 echo $GOPATH（Unix/Linux/macOS）来检查环境变量的值。
+	3、Go Modules 启用：
+		如果你的项目启用了 Go Modules（推荐），那么 GOPATH 的作用就大大减少了。Go Modules 允许你的项目有自己的 go.mod 文件，该文件定义了项目的依赖项。在这种情况下，Go 编译器会优先根据 go.mod 文件中的信息来解析包路径，而不是 GOPATH。确保你的项目根目录下有 go.mod 文件，并且该文件中的模块路径是正确的。
+	4、代码中的导入路径错误：
+		检查你的代码中是否有错误的包导入路径。例如，如果你的包路径是 demo1/mydemo2，确保你的 import 语句是这样的：import "demo1/mydemo2"（如果启用了 Go Modules）或者 import "../mydemo2"（如果没有启用 Go Modules，并且 mydemo2 包位于上一级目录中，但这种做法通常不推荐）。
+	5、清理和重建：
+		如果你的项目之前使用了 GOPATH 模式，并且你现在想要切换到 Go Modules，你可能需要删除旧的构建缓存和 GOPATH/pkg 下的内容，然后重新运行你的项目。
+	6、检查 IDE 的构建配置：
+		在 IDE 中，检查构建配置是否指向了正确的 Go SDK 版本和工作目录。在某些 IDE 中，你可以为每个项目或运行配置设置不同的环境变量和构建参数。
+	7、重启 IDE：
+		有时候，简单地重启 IDE 可以解决环境变量或配置未更新的问题。
+	8、查看编译错误和日志：
+		仔细查看编译错误和 IDE 的日志输出，看是否有更详细的错误信息可以帮助你诊断问题。
+		如果你已经检查了以上所有点，但问题仍然存在，那么可能需要更深入地查看你的项目配置或 IDE 设置，或者考虑在命令行中直接运行 Go 命令来排除 IDE 相关的问题。
+		
+		
+实际报错（勾选了GO Modules）：
+	GOROOT=D:\Program Files\Go #gosetup
+	GOPATH=D:\go_study #gosetup
+	"D:\Program Files\Go\bin\go.exe" build -o C:\Users\Echo\AppData\Local\JetBrains\GoLand2024.1\tmp\GoLand\___go_build_main_go.exe D:\go_study\src\study2\test1\main\main.go #gosetup
+	main.go:6:2: package study2/test1/dbutil is not in std (D:\Program Files\Go\src\study2\test1\dbutil)
+
+修正变量（取消GO Modules，让GOPATH环境变量生效）：
+	GOROOT=D:\Program Files\Go #gosetup
+	GOPATH=D:\go_study #gosetup
+	"D:\Program Files\Go\bin\go.exe" build -o C:\Users\Echo\AppData\Local\JetBrains\GoLand2024.1\tmp\GoLand\___go_build_main_go.exe D:\go_study\src\study2\test1\main\main.go #gosetup
+	C:\Users\Echo\AppData\Local\JetBrains\GoLand2024.1\tmp\GoLand\___go_build_main_go.exe #gosetup
+	hello world
